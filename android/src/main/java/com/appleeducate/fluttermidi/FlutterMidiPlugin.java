@@ -66,7 +66,7 @@ public class FlutterMidiPlugin implements MethodCallHandler {
         result.error("MidiUnavailableException", e.toString(), null);
       }
     } else if (call.method.equals("unmute")) {
-      result.success(null);
+      result.success("");
     } else if (call.method.equals("play_midi_note")) {
       int _note = call.argument("note");
       try {
