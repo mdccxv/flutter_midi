@@ -16,7 +16,7 @@ class FlutterMidi extends FlutterMidiPlatform {
   Future<String?> prepare(
       {required ByteData sf2, String name = "instrument.sf2"}) async {
     File _file = await writeToFile(sf2, name: name);
-    final String result =
+    final String? result =
         await _channel.invokeMethod('prepare_midi', {"path": _file.path});
     print("Result: $result");
     return result;
@@ -33,7 +33,7 @@ class FlutterMidi extends FlutterMidiPlatform {
     final Map<dynamic, dynamic> mapData = <dynamic, dynamic>{};
     mapData["path"] = _file.path;
     print("Path => ${_file.path}");
-    final String result = await _channel.invokeMethod('change_sound', mapData);
+    final String? result = await _channel.invokeMethod('change_sound', mapData);
     print("Result: $result");
     return result;
   }
@@ -41,7 +41,7 @@ class FlutterMidi extends FlutterMidiPlatform {
   /// Unmute the device temporarly even if the mute switch is on or toggled in settings.
   @override
   Future<String?> unmute() async {
-    final String result = await _channel.invokeMethod('unmute');
+    final String? result = await _channel.invokeMethod('unmute');
     return result;
   }
 
@@ -51,7 +51,7 @@ class FlutterMidi extends FlutterMidiPlatform {
   Future<String?> stopMidiNote({
     required int midi,
   }) async {
-    final String result =
+    final String? result =
         await _channel.invokeMethod('stop_midi_note', {"note": midi});
     return result;
   }
