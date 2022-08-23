@@ -1,32 +1,43 @@
 package com.appleeducate.fluttermidi;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
+import java.io.File;
+import java.io.IOException;
+
 import cn.sherlock.com.sun.media.sound.SF2Soundbank;
 import cn.sherlock.com.sun.media.sound.SoftSynthesizer;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
-import java.io.File;
-import java.io.IOException;
 import jp.kshoji.javax.sound.midi.InvalidMidiDataException;
 import jp.kshoji.javax.sound.midi.MidiUnavailableException;
 import jp.kshoji.javax.sound.midi.Receiver;
 import jp.kshoji.javax.sound.midi.ShortMessage;
 
 /** FlutterMidiPlugin */
-public class FlutterMidiPlugin implements MethodCallHandler {
-  private SoftSynthesizer synth;
+public class FlutterMidiPlugin implements MethodCallHandler, FlutterPlugin {
   private Receiver recv;
+  private MethodChannel channel;
 
-  /** Plugin registration. */
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_midi");
-    channel.setMethodCallHandler(new FlutterMidiPlugin());
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    channel = new MethodChannel(binding.getBinaryMessenger(), "flutter_midi");
+    channel.setMethodCallHandler(this);
+    Context applicationContext = binding.getApplicationContext();
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result) {
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+
+  }
+
+  @Override
+  public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+    SoftSynthesizer synth;
     if (call.method.equals("prepare_midi")) {
       try {
         String _path = call.argument("path");
